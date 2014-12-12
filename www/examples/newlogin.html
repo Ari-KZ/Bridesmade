@@ -1,0 +1,84 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Travel App</title>
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<script>
+
+$(document).ready(function() {
+		    /* capture the submit button on the loginform and look the user up the database */
+	     	    $('#Submit').click(function() {
+/* pick up the values of the email and password fields  */
+	     var emailval = $("#email").val();
+             var passval = $("#password").val();
+/* create the URL for the backend php program */
+      var URL="http://websys3.stern.nyu.edu/websysF14UB/websysF14UB3/processlogin.php";
+/* create the parameters to pass viw get */
+      var datastring="email=" + emailval + "&password=" + passval;
+/*  tell Jquery to send the info and expect back a JSON object  */
+			     $.getJSON(URL, datastring, function(data) {
+ /*  Loop through the users object and for each row in the user array (only one hopefully) */
+/* Pull out the FIrstName and LastName fields  */
+                               $.each(data['users'], function(index, value) {
+			  $('#page2').append( value['user']['FirstName'] + " " + value['user']['LastName'] + " Has Logged In");
+					  $('#page2').append("<br>");
+					});
+
+
+
+						       });
+					     });
+});
+</script>
+
+</head> 
+<body> 
+
+<div data-role="page" id="page">
+	<div data-role="header">
+		<h1>Fernweh</h1>
+	</div>
+	<div data-role="content">	
+		<ul data-role="listview" class="mainmenu">
+			<li><a href="#page2">Login</a></li>
+            <li> </li>
+			
+		</ul>		
+	</div>
+	
+</div>
+
+<div data-role="page" id="page2">
+	<div data-role="header">
+		<h1>Login Page</h1>
+	</div>
+<div data-role="content">	
+<!-- Create a div for the form, BUT don't use the form element  -->
+<!-- Create labels and ids for each field -->
+<!-- the ids are used to access the values to be passwd to the backend using AJAX  -->
+<div id="loginform" >
+<h2>Login Here</h2>
+<label>Email :</label>
+<input type="text" id="email">
+<label>Password : </label>
+<input type="text"  id="password">
+<!-- Create a submit button with an id that will be attached to an onclick function -->
+<label>Submit <input type="Button" id="Submit" value="Click to Login"</label>
+</div>
+      	</div>
+	
+</div>
+
+<div data-role="page" id="page3">
+	<div data-role="header">
+	</div>
+<div data-role="content">	
+</div>
+
+
+</body>
+</html>

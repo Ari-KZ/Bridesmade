@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	/* Logon */
+	$('#loginsubmit').click(function() {
+	var uname = $("#username").val();
+    var pword = $("#password").val();
+    
+	/* URL for login php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/login.php";
+    
+	/* create the parameters to pass viw get */
+      var datastring="username=" + uname + "&password=" + pword;
+		/*  tell Jquery to send the info and expect back a JSON object  */
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					$('#postlogin').text("The user " + value['user']['Username'] + " is now logged in!");
+					$(location).attr('href','#profile');
+        		}
+			});
+
+
+		});
+	});
+	
+	
+	/* Register */
+	$('#registersubmit').click(function() {
+	/*Get register values */
+    var uname = $("#regusername").val();
+	var email = $("#regemail").val();
+	var pword = $("#regpassword").val();
+	var fname = $("#regfirstname").val();
+	var lname = $("#reglastname").val();
+	
+	/* URL for register php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/register.php";
+    
+	/* Parameter string */
+      var datastring="username=" + uname + "&email=" + email + "&password=" + pword + "&firstname=" + fname + "&lastname=" + lname;
+      $('#postregister').text("Datastring is " + datastring);
+      
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+
+        	if (data == true){
+        		$('#postregister').text("You have registered successfully!");
+        	}
+        	else{
+        		$('#postregister').text("Registration failed!");
+        	}
+
+
+		});	
+		
+	});
+	
+	
+	
+	/* Logout */
+	$('#logoutsubmit').click(function() {
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/logout.php";
+		
+		$.get(URL, function(data) {
+			$(location).attr('href','#home');
+		});
+		
+	});
+	
+	
+	
+		function getusername(){
+		/* URL for getcurrentusername php */
+   		 var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getcurrentusername.php";
+    
+		/*  Send info and get back data  */
+		$.get(URL, function(data) {
+
+        	if (data){
+        		//$('#catinfo').append("Username is " + data);
+        		name = data;
+        	}
+        	else{
+        		//$('#catinfo').append("fail");
+        	}
+        	
+        });
+        
+        return name;
+	}
+	
+	
+	
+	$('#createwedding').click(function() {
+	
+		/*Get wedding name value */
+	    var wedname = $("#weddingname").val();
+	    var uname = getusername();
+		
+		/* URL for addwedding php */
+	    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/addwedding.php";
+	    
+		/* Parameter string */
+	      var datastring="wedname=" + wedname + "&uname=" + uname;
+      
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+        	if (data == true){
+        		$('#postcreatewed').append("You have started a new wedding!  Select it below to begin!");
+        	}
+        	else{
+        		$('#postcreatewed').append("Failed to add new wedding!");
+        	}
+
+
+		});	
+	
+	
+	});
+	
+	
+	
+	
+	/* List Weddings */
+	$('#listweddings').click(function() {
+	
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/listweddings.php";
+		$.getJSON(URL, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$weddinglist = value;
+        		if (value){
+					//$('#weddinglist').append("<a href=\"#wedding\">" + value["user"]["Name"] + "</a>");
+					//$('#weddinglist').append("<br>");
+					
+					//$('#weddinglist').append("<input type=\"button\" value=\">" + value["user"]["Name"] + "\" id=\"clickwedding\">");
+					//$('#weddinglist').append("<br>");
+					
+					$('#weddinglist').append("<input type=\"radio\" value=\">" + value["user"]["Name"] + "\" name=\"radiogroup\">" + value["user"]["Name"]);
+					$('#weddinglist').append("<br>");
+
+        		}
+			});
+
+
+		});
+	
+	});
+	
+	
+	
+	function getweddingid(WeddingName){
+		
+		/* URL for getwedding php */
+   		 var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getwedding.php";
+    	
+    	var uname = getusername();
+    	
+    	datastring="uname=" + uname + "&wedname=" + WeddingName;
+    
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					wedid = value['user']['ID'];
+					$('#catinfo').append("Wedding ID is " + wedid);
+        		}
+			});
+        	
+        });
+		
+		return wedid;
+		
+	}
+	
+	
+	
+	/*Select a Wedding */
+	$('#selectwedding').click(function() {
+		//$('#weddinglist').append("Button clicked");
+		//$('#weddinglist').append("Value is: " + $('input:radio[name=radiogroup]:checked').val());
+		$currentwedding = $('input:radio[name=radiogroup]:checked').val();
+		
+		/* Move to the wedding page */
+		$(location).attr('href','#weddingmain');
+	});
+	
+	
+	
+	/*Select a Category */
+	$('#cat1').click(function() {
+		$(location).attr('href','#category');
+		
+		var wedid = getweddingid("New Wedding");
+		
+		$('#catinfo').append("Wedding ID is " + wedid);
+		
+	});
+	$('#cat2').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat3').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat4').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat5').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat6').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat7').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat8').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	$('#cat9').click(function() {
+		$(location).attr('href','#category');
+	
+	});
+	
+	
+	
+});
+
+
+
+
+</script>
+</head>
+<body>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1>BridesMade Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+	<p align="center">
+	<a href="#login">Login</a>
+	<br>
+	<a href="#register">Register</a>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+  	
+  	<div id="nologmaincontent" align="center">
+    <p align="center">Login here!</p>
+
+	<div id="loginform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="username">
+	<br>
+	Password:<br>
+	<input type="text" id="password"">
+	<br><br>
+	<input type="button" value="Login" id="loginsubmit">
+	</form> 
+	</div>
+	
+	<p id="postlogin"></p>
+	
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="register">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+    <p align="center">Register here!</p>
+   
+	<div id="registerform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="regusername">
+	<br>
+	Password:<br>
+	<input type="text" id="regpassword"">
+	<br>
+	Email:<br>
+	<input type="text" id="regemail">
+	<br>
+	First name:<br>
+	<input type="text" id="regfirstname">
+	<br>
+	Last name:<br>
+	<input type="text" id="reglastname">
+	<br><br>
+	<input type="button" value="Register" id="registersubmit">
+	</form> 
+	</div>
+	
+	<p id="postregister"></p>
+	<br>
+	<br>
+	
+	</div>
+
+  </div>
+
+</div> 
+
+<div data-role="page" id="logout">
+  <div data-role="header">
+    <h1>BridesMade Logout</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	<form action="logout.php">
+	Would you like to logout?
+	<input type="button" value="Logout" id="logoutsubmit">
+	</form>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="profile">
+  <div data-role="header">
+    <h1>BridesMade Profile</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	Welcome!
+	<br>
+	<form>
+	Would you like to start on a new wedding?
+	Name:<br>
+	<input type="text" id="weddingname"">
+	<input type="button" value="Create New" id="createwedding">
+	</form>
+	<p id="postcreatewed"></p>
+	
+	<br>
+	<br>
+	
+	<form>
+	Click for a list of your current weddings:
+	<input type="button" value="Get Wedding List" id="listweddings">
+	</form>
+	</p>
+	
+	<form id="weddingselection">
+	<p id="weddinglist"></p>
+	<input type="button" value="Select Wedding" id="selectwedding">
+	</form>
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="weddingmain">
+  <div data-role="header">
+    <h1>BridesMade Wedding</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	
+	<div class="cat" id="cat1">
+	<p class="cattext">Category 1</p>
+	</div>
+	<div class="cat" id="cat2">
+	<p class="cattext">Category 2</p>
+	</div>
+	<div class="cat" id="cat3">
+	<p class="cattext">Category 3</p>
+	</div>
+	<div class="cat" id="cat4">
+	<p class="cattext">Category 4</p>
+	</div>
+	<div class="cat" id="cat5">
+	<p class="cattext">Category 5</p>
+	</div>
+	<div class="cat" id="cat6">
+	<p class="cattext">Category 6</p>
+	</div>
+	<div class="cat" id="cat7">
+	<p class="cattext">Category 7</p>
+	</div>
+	<div class="cat" id="cat8">
+	<p class="cattext">Category 8</p>
+	</div>
+	<div class="cat" id="cat9">
+	<p class="cattext">Category 9</p>
+	</div>
+	
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="category">
+  <div data-role="header">
+    <h1 id="cattitle">BridesMade Category</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p>Category Stuff</p>
+	<p align="center" id="catinfo"></p>
+	
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+
+
+</body>
+</html>
+

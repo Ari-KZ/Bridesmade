@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	/* Get the login info */
+	$('#loginsubmit').click(function() {
+	var uname = $("#username").val();
+    var pword = $("#password").val();
+    
+	/* URL for login php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/login.php";
+    
+	/* create the parameters to pass viw get */
+      var datastring="username=" + uname + "&password=" + pword;
+		/*  tell Jquery to send the info and expect back a JSON object  */
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					$('#postlogin').text("The user " + value['user']['Username'] + " is now logged in!");
+					$(location).attr('href','#home');
+        		}
+			});
+
+
+		});
+	});
+});
+
+</script>
+</head>
+<body>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1>BridesMade Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="home.html">Home</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	<a href="#login">Login</a>
+	<br>
+	<a href="#register">Register</a>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+
+  <nav><p>Navigation</p>
+	<a href="home.html">Home</a></nav>
+  	
+  	<div id="maincontent">
+    <p align="center">Login here!</p>
+
+	<div id="loginform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="username">
+	<br>
+	Password:<br>
+	<input type="text" id="password"">
+	<br><br>
+	<input type="button" value="Submit" id="loginsubmit">
+	</form> 
+	</div>
+	
+	<p id="postlogin"></p>
+	
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="register">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+
+  <nav><p>Navigation</p>
+	<a href="home.html">Home</a></nav>
+	
+	<div id="maincontent">
+    <p align="center">Register here!</p>
+   
+	<div id="registerform" align="center">
+	<form action="register.php">
+	Username:<br>
+	<input type="text" name="username">
+	<br>
+	Password:<br>
+	<input type="text" name="password"">
+	<br>
+	Email:<br>
+	<input type="text" name="email">
+	<br>
+	First name:<br>
+	<input type="text" name="firstname">
+	<br>
+	Last name:<br>
+	<input type="text" name="lastname">
+	<br><br>
+	<input type="submit" value="Submit">
+	</form> 
+	</div>
+	</div>
+
+  </div>
+
+</div> 
+
+
+</body>
+</html>
+

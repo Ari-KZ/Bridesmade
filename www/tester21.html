@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	/* Logon */
+	$('#loginsubmit').click(function() {
+	var uname = $("#username").val();
+    var pword = $("#password").val();
+    
+    create_cookie("currentusername", uname, 1, "/");
+    
+	/* URL for login php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/login.php";
+    
+	/* create the parameters to pass viw get */
+      var datastring="username=" + uname + "&password=" + pword;
+		/*  tell Jquery to send the info and expect back a JSON object  */
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					$('#postlogin').text("The user " + value['user']['Username'] + " is now logged in!");
+					$(location).attr('href','#profile');
+        		}
+			});
+
+
+		});
+	});
+	
+	
+	/* Register */
+	$('#registersubmit').click(function() {
+	/*Get register values */
+    var uname = $("#regusername").val();
+	var email = $("#regemail").val();
+	var pword = $("#regpassword").val();
+	var fname = $("#regfirstname").val();
+	var lname = $("#reglastname").val();
+	
+	/* URL for register php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/register.php";
+    
+	/* Parameter string */
+      var datastring="username=" + uname + "&email=" + email + "&password=" + pword + "&firstname=" + fname + "&lastname=" + lname;
+      $('#postregister').text("Datastring is " + datastring);
+      
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+
+        	if (data == true){
+        		$('#postregister').text("You have registered successfully!");
+        	}
+        	else{
+        		$('#postregister').text("Registration failed!");
+        	}
+
+
+		});	
+		
+	});
+	
+	
+	
+	/* Logout */
+	$('#logoutsubmit').click(function() {
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/logout.php";
+		
+		$.get(URL, function(data) {
+			$(location).attr('href','#home');
+		});
+		
+	});
+	
+	
+	
+	/* Create new wedding */
+	$('#createwedding').click(function() {
+	
+		/*Get wedding name value */
+	    var wedname = $("#weddingname").val();
+	    var uname = retrieve_cookie("currentusername");
+		
+		/* URL for addwedding php */
+	    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/addwedding.php";
+	    
+		/* Parameter string */
+	      var datastring="wedname=" + wedname + "&uname=" + uname;
+      
+      	var isnewwedding = false;
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+        	if (data == true){
+        		$('#postcreatewed').append("You have started a new wedding!  Select it below to begin!");
+        		isnewwedding = true;
+        	}
+        	else{
+        		$('#postcreatewed').append("Failed to add new wedding!");
+        	}
+
+
+		});	
+		
+
+		/* Create all the categories for this wedding */
+			
+			/*Get wedding id value */
+			var wid = retrieve_cookie("currentweddingid").substring(1);
+			
+			/* URL for register php */
+		    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/createallcategories.php";
+		    
+			/* Parameter string */
+		      var datastring="wedid=" + wid;
+		      
+		      
+			/*  Send info and get back data  */
+			$.get(URL, datastring, function(data) {
+
+        		if (data == true){
+        			$('#postcreatewed').append(" Categories created successfully!");
+        		}
+        		else{
+        			$('#postcreatewed').append("Category fail!");
+        		}
+        	
+
+
+			});	
+			
+		
+	
+	
+	});
+	
+	
+	
+	
+	/* List Weddings */
+	$('#listweddings').click(function() {
+	
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/listweddings.php";
+		$.getJSON(URL, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$weddinglist = value;
+        		if (value){
+					//$('#weddinglist').append("<a href=\"#wedding\">" + value["user"]["Name"] + "</a>");
+					//$('#weddinglist').append("<br>");
+					
+					//$('#weddinglist').append("<input type=\"button\" value=\">" + value["user"]["Name"] + "\" id=\"clickwedding\">");
+					//$('#weddinglist').append("<br>");
+					
+					$('#weddinglist').append("<input type=\"radio\" value=\">" + value["user"]["ID"] + "\" name=\"radiogroup\" id=\"" + value["user"]["Name"] + "\"><label for=\"product\">" + value["user"]["Name"] + "</label>");
+					$('#weddinglist').append("<br>");
+
+        		}
+			});
+
+
+		});
+	
+	});
+
+	function create_cookie(name, value, days2expire, path) {
+  		var date = new Date();
+  		date.setTime(date.getTime() + (days2expire * 24 * 60 * 60 * 1000));
+  		var expires = date.toUTCString();
+  		document.cookie = name + '=' + value + ';' +
+                   'expires=' + expires + ';' +
+                   'path=' + path + ';';
+	}
+	
+	function retrieve_cookie(name) {
+ 		 var cookie_value = "",
+   		 current_cookie = "",
+   		 name_expr = name + "=",
+    	all_cookies = document.cookie.split(';'),
+   		 n = all_cookies.length;
+ 
+  		for(var i = 0; i < n; i++) {
+    		current_cookie = all_cookies[i].trim();
+    		if(current_cookie.indexOf(name_expr) == 0) {
+     			 cookie_value = current_cookie.substring(name_expr.length, current_cookie.length);
+      			break;
+    		}
+  		}
+  		return cookie_value;
+	}
+	
+	
+	
+	
+	/*Select a Wedding */
+	$('#selectwedding').click(function() {
+		//$('#weddinglist').append("Button clicked");
+		//$('#weddinglist').append("Value is: " + $('input:radio[name=radiogroup]:checked').val());
+		
+   		var wedid = $('input:radio[name=radiogroup]:checked').val();
+   		var wedname = $('input:radio[name=radiogroup]:checked + label').text();
+    
+    	/* Set wedding name and wedding id */
+    	create_cookie("currentwedding", wedname, 1, "/");
+    	create_cookie("currentweddingid", wedid, 1, "/");
+	
+		/* Move to the wedding page */
+		$(location).attr('href','#weddingmain');
+	});
+	
+	
+
+	
+	
+	
+	/*Select a Category */
+	$('#cat1').click(function() {
+		$(location).attr('href','#category');
+		
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding id */
+		var wid = retrieve_cookie("currentweddingid").substring(1);
+		/* Get the wedding name */
+		var wname = retrieve_cookie("currentwedding");
+		/* Set the category */
+		var catid = 1;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding id is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+		
+	});
+	$('#cat2').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 2;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat3').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 3;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat4').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 4;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat5').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 5;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat6').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 6;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat7').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 7;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat8').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 8;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	$('#cat9').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 9;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		$('#catinfo').append("User is: " + uname);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("Wedding is: " + wid);
+		$('#catinfo').append("<br>");
+		$('#catinfo').append("category is: " + catid);
+	});
+	
+	
+	$('#inspirationaddinfo').click(function() {
+		//Show the text and submit
+		$('#inspedittext').val($('#inspinfo').text());
+		$('#inspedittext').css("display", "block");
+		$('#inspeditform').css("display", "block");
+	});
+	
+	$('#insptextsubmit').click(function() {
+		var insptext = $('#inspedittext').val();
+		$('#inspinfo').text(insptext);
+		
+		$('#inspedittext').css("display", "none");
+		$('#inspeditform').css("display", "none");
+	});
+	
+	
+});
+
+
+
+
+</script>
+</head>
+<body>
+<center>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1>BridesMade Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+	<p align="center">
+	<a href="#login">Login</a>
+	<br>
+	<a href="#register">Register</a>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+  	
+  	<div id="nologmaincontent" align="center">
+    <p align="center">Login here!</p>
+
+	<div id="loginform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="username">
+	<br>
+	Password:<br>
+	<input type="text" id="password"">
+	<br><br>
+	<input type="button" value="Login" id="loginsubmit">
+	</form> 
+	</div>
+	
+	<p id="postlogin"></p>
+	
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="register">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+    <p align="center">Register here!</p>
+   
+	<div id="registerform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="regusername">
+	<br>
+	Password:<br>
+	<input type="text" id="regpassword"">
+	<br>
+	Email:<br>
+	<input type="text" id="regemail">
+	<br>
+	First name:<br>
+	<input type="text" id="regfirstname">
+	<br>
+	Last name:<br>
+	<input type="text" id="reglastname">
+	<br><br>
+	<input type="button" value="Register" id="registersubmit">
+	</form> 
+	</div>
+	
+	<p id="postregister"></p>
+	<br>
+	<br>
+	
+	</div>
+
+  </div>
+
+</div> 
+
+<div data-role="page" id="logout">
+  <div data-role="header">
+    <h1>BridesMade Logout</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	<form action="logout.php">
+	Would you like to logout?
+	<input type="button" value="Logout" id="logoutsubmit">
+	</form>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="profile">
+  <div data-role="header">
+    <h1>BridesMade Profile</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	Welcome!
+	<br>
+	<form>
+	Would you like to start on a new wedding?
+	Name:<br>
+	<input type="text" id="weddingname"">
+	<input type="button" value="Create New" id="createwedding">
+	</form>
+	<p id="postcreatewed"></p>
+	
+	<br>
+	<br>
+	
+	<form>
+	Click for a list of your current weddings:
+	<input type="button" value="Get Wedding List" id="listweddings">
+	</form>
+	</p>
+	
+	<form id="weddingselection">
+	<p id="weddinglist"></p>
+	<input type="button" value="Select Wedding" id="selectwedding">
+	</form>
+	<p id="weddingiddisplay"></p>
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="weddingmain">
+  <div data-role="header">
+    <h1>BridesMade Wedding</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	
+	<div class="cat" id="cat1">
+	<p class="cattext">Category 1</p>
+	</div>
+	<div class="cat" id="cat2">
+	<p class="cattext">Category 2</p>
+	</div>
+	<div class="cat" id="cat3">
+	<p class="cattext">Category 3</p>
+	</div>
+	<div class="cat" id="cat4">
+	<p class="cattext">Category 4</p>
+	</div>
+	<div class="cat" id="cat5">
+	<p class="cattext">Category 5</p>
+	</div>
+	<div class="cat" id="cat6">
+	<p class="cattext">Category 6</p>
+	</div>
+	<div class="cat" id="cat7">
+	<p class="cattext">Category 7</p>
+	</div>
+	<div class="cat" id="cat8">
+	<p class="cattext">Category 8</p>
+	</div>
+	<div class="cat" id="cat9">
+	<p class="cattext">Category 9</p>
+	</div>
+	
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="category">
+  <div data-role="header">
+    <h1 id="cattitle">BridesMade Category</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<h2>Inspiration</h2>
+	<p>Pictures</p>
+	<div id="inspirationpics">
+		<form action="upload.php" method="post" enctype="multipart/form-data">
+	    Select image to upload (currently does not work):
+	    <input type="file" name="fileToUpload" id="fileToUpload">
+	    <input type="submit" value="Upload Image" name="submit">
+		</form>
+	</div>
+	
+	<br>
+	<p>Inspiration Info</p>
+	<p id="inspinfo">Testing</p>
+	<form>
+	<input type="button" value="Edit Inspiration Info" id="inspirationaddinfo">
+	</form>
+	<textarea form="inspeditform" id="inspedittext"></textarea>
+	<form id="inspeditform">
+	<p id="putinspsubmit">
+	<input type="button" value="Submit" id="insptextsubmit"></p>
+	</form>
+	<br>
+	<br>
+	<h2>Pictures</h2>
+	<div id="pictures"></div>
+	
+	
+	<h2>About</h2>
+	<p id="catabout"></p>
+	
+	<br>
+	<p>Category Stuff</p>
+	<p align="center" id="catinfo"></p>
+	
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+
+</center>
+</body>
+</html>
+

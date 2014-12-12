@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	/* Logon */
+	$('#loginsubmit').click(function() {
+	var uname = $("#username").val();
+    var pword = $("#password").val();
+    
+    create_cookie("currentusername", uname, 1, "/");
+    
+	/* URL for login php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/login.php";
+    
+	/* create the parameters to pass viw get */
+      var datastring="username=" + uname + "&password=" + pword;
+		/*  tell Jquery to send the info and expect back a JSON object  */
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					$('#postlogin').text("The user " + value['user']['Username'] + " is now logged in!");
+					$(location).attr('href','#profile');
+        		}
+			});
+
+
+		});
+	});
+	
+	
+	/* Register */
+	$('#registersubmit').click(function() {
+	/*Get register values */
+    var uname = $("#regusername").val();
+	var email = $("#regemail").val();
+	var pword = $("#regpassword").val();
+	var fname = $("#regfirstname").val();
+	var lname = $("#reglastname").val();
+	
+	/*Create folder for user's images */
+	$.ajax({
+	  	method: 'POST',
+	  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/createuserfolder.php',
+	 	 data: {folderName: uname},
+	 	 success: function(data) {
+	    	$('#postregister').text("Added folder");
+	  	} 
+	});
+	
+	/* URL for register php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/register.php";
+    
+	/* Parameter string */
+      var datastring="username=" + uname + "&email=" + email + "&password=" + pword + "&firstname=" + fname + "&lastname=" + lname;
+      $('#postregister').text("Datastring is " + datastring);
+      
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+
+        	if (data == true){
+        		$('#postregister').text("You have registered successfully!");
+        	}
+        	else{
+        		$('#postregister').text("Registration failed!");
+        	}
+
+
+		});	
+		
+		$(location).attr('href','#home');
+		
+	});
+	
+	
+	
+	/* Logout */
+	$('#logoutsubmit').click(function() {
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/logout.php";
+		
+		$.get(URL, function(data) {
+			$(location).attr('href','#home');
+		});
+		
+	});
+	
+	
+	
+	/* Create new wedding */
+	$('#createwedding').click(function() {
+	
+		/*Get wedding name value */
+	    var wedname = $("#weddingname").val();
+	    var uname = retrieve_cookie("currentusername");
+		
+		/* URL for addwedding php */
+	    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/addwedding.php";
+	    
+		/* Parameter string */
+	      var datastring="wedname=" + wedname + "&uname=" + uname;
+      
+      	var isnewwedding = false;
+      
+		/*  Send info and get back data  */
+		$.get(URL, datastring, function(data) {
+        	if (data == true){
+        		$('#postcreatewed').append("You have started a new wedding!  Select it below to begin!");
+        		isnewwedding = true;
+        		
+        		/* Create all the categories for this wedding */
+			
+			
+				/* URL for register php */
+			    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/createallcategories.php";
+			      
+			      
+				/*  Send info and get back data  */
+				$.get(URL, function(data) {
+
+        		if (data == true){
+        			$('#postcreatewed').append(" Categories created successfully!");
+        		}
+        		else{
+        			$('#postcreatewed').append("Category fail!");
+        		}
+        	
+
+
+			});	
+        	}
+        	else{
+        		$('#postcreatewed').append("Failed to add new wedding!");
+        	}
+
+
+		});	
+	
+	});
+	
+	
+	
+	
+	/* List Weddings */
+	$('#listweddings').click(function() {
+		
+		$('#weddingselection').css("display", "block");
+	
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/listweddings.php";
+		$.getJSON(URL, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$weddinglist = value;
+        		if (value){
+					//$('#weddinglist').append("<a href=\"#wedding\">" + value["user"]["Name"] + "</a>");
+					//$('#weddinglist').append("<br>");
+					
+					//$('#weddinglist').append("<input type=\"button\" value=\">" + value["user"]["Name"] + "\" id=\"clickwedding\">");
+					//$('#weddinglist').append("<br>");
+					
+					$('#weddinglist').append("<input type=\"radio\" value=\">" + value["user"]["ID"] + "\" name=\"radiogroup\" id=\"" + value["user"]["Name"] + "\"><label for=\"product\">" + value["user"]["Name"] + "</label>");
+					$('#weddinglist').append("<br>");
+
+        		}
+			});
+
+
+		});
+	
+	});
+
+	function create_cookie(name, value, days2expire, path) {
+  		var date = new Date();
+  		date.setTime(date.getTime() + (days2expire * 24 * 60 * 60 * 1000));
+  		var expires = date.toUTCString();
+  		document.cookie = name + '=' + value + ';' +
+                   'expires=' + expires + ';' +
+                   'path=' + path + ';';
+	}
+	
+	function retrieve_cookie(name) {
+ 		 var cookie_value = "",
+   		 current_cookie = "",
+   		 name_expr = name + "=",
+    	all_cookies = document.cookie.split(';'),
+   		 n = all_cookies.length;
+ 
+  		for(var i = 0; i < n; i++) {
+    		current_cookie = all_cookies[i].trim();
+    		if(current_cookie.indexOf(name_expr) == 0) {
+     			 cookie_value = current_cookie.substring(name_expr.length, current_cookie.length);
+      			break;
+    		}
+  		}
+  		return cookie_value;
+	}
+	
+	
+	
+	
+	/*Select a Wedding */
+	$('#selectwedding').click(function() {
+		//$('#weddinglist').append("Button clicked");
+		//$('#weddinglist').append("Value is: " + $('input:radio[name=radiogroup]:checked').val());
+		
+   		var wedid = $('input:radio[name=radiogroup]:checked').val();
+   		var wedname = $('input:radio[name=radiogroup]:checked + label').text();
+    
+    	/* Set wedding name and wedding id */
+    	create_cookie("currentwedding", wedname, 1, "/");
+    	create_cookie("currentweddingid", wedid, 1, "/");
+	
+		/* Move to the wedding page */
+		$(location).attr('href','#weddingmain');
+	});
+	
+	function getcategorytext(WeddingID, CategoryID){
+		/* Get inspiration text */
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getinspirationtext.php',
+		 	 data: {wedid: WeddingID, catid: CategoryID},
+		 	 success: function(data) {
+		    	$('#inspinfo').append(data);
+	  		} 
+	  	
+		});
+		
+		/* Get about text */
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getpicturestext.php',
+		 	 data: {wedid: WeddingID, catid: CategoryID},
+		 	 success: function(data) {
+		    	$('#aboutinfo').append(data);
+	  		} 
+	  	
+		});
+		
+	}
+	
+	/* Clear text in given elementID */
+	function emptyelement(elementID){
+		
+		$(elementID).empty();
+	}
+	
+	
+	/ * Places Inspiration Images */
+	function getinspimagenames(WeddingID, CategoryID){
+		
+		emptyelement('#insppics');
+		
+		var uname = retrieve_cookie("currentusername");
+		
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getinspirationpics.php";
+		datastring = "wedid=" + WeddingID + "&catid=" + CategoryID;
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get insp pic name info */
+        	$.each(data['names'], function(index, value) {
+        		if (value){
+					$('#insppics').append("<img src = \"http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/images/" + uname + "/" + value['name']['Name'] + "\" class=\"picsmall\">");
+
+        		}
+			});
+
+
+		});
+		
+	}
+	
+	
+	/ * Places Pictures Images */
+	function getimagenames(WeddingID, CategoryID){
+		
+		emptyelement('#pics');
+		
+		var uname = retrieve_cookie("currentusername");
+		
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/getpics.php";
+		datastring = "wedid=" + WeddingID + "&catid=" + CategoryID;
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get insp pic name info */
+        	$.each(data['names'], function(index, value) {
+        		if (value){
+					$('#pics').append("<img src = \"http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/images/" + uname + "/" + value['name']['Name'] + "\" class=\"picsmall\">");
+
+        		}
+			});
+
+
+		});
+		
+	}
+	
+	
+	
+	
+	/* Currently doesn't work - Try more later */
+	/* If class os picsmall clicked, make bigger */
+	$('.picsmall').click(function(){
+		$(this).css({'width' : '80%'});
+	});
+	
+	
+	
+	
+	
+	/* Get the tasks from the database */
+	function gettasklist(WeddingID, CategoryID){
+		
+		emptyelement('#tasktable');
+		
+		/*Add header row to task table*/
+		$('#tasktable').append("<tr class=\"tasktitles\"><th>Name</th><th>Budget</th><th>Completed</th></tr>");
+		
+		var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/gettasklist.php";
+		datastring = "wedid=" + WeddingID + "&catid=" + CategoryID;
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get task info */
+        	$.each(data['tasks'], function(index, value) {
+        		if (value){
+					$('#tasktable').append("<tr><td>" + value['task']['Name'] + "</td><td>" + value['task']['Budget'] + "</td><td>" + value['task']['Completed'] + "</td></tr>");
+
+        		}
+			});
+
+
+		});
+		
+	}
+
+	
+	
+	
+	/*Select a Category */
+	$('#cat1').click(function() {
+		$(location).attr('href','#category');
+		
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding id */
+		var wid = retrieve_cookie("currentweddingid").substring(1);
+		/* Get the wedding name */
+		var wname = retrieve_cookie("currentwedding");
+		/* Set the category */
+		var catid = 1;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+		getcategorytext(wid, catid);
+		getinspimagenames(wid, catid);
+		getimagenames(wid, catid);
+		gettasklist(wid, catid);
+		
+	});
+	$('#cat2').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 2;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat3').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 3;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat4').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 4;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat5').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 5;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat6').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 6;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat7').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 7;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat8').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 8;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	$('#cat9').click(function() {
+		$(location).attr('href','#category');
+	
+		/* Get the username */
+		var uname = retrieve_cookie("currentusername");
+		/* Get the wedding name */
+		var wid = retrieve_cookie("currentwedding").substring(1);
+		/* Set the category */
+		var catid = 9;
+		create_cookie("currentcategory", catid, 1, "/");
+		
+	});
+	
+	/* Edit inspiration info */
+	$('#inspaddinfo').click(function() {
+		//Show the text and submit
+		$('#inspedittext').val($('#inspinfo').text());
+		$('#inspedittext').css("display", "block");
+		$('#inspeditform').css("display", "block");
+	});
+	
+	/* Edit about info */
+	$('#addinfo').click(function() {
+		//Show the text and submit
+		$('#edittext').val($('#addinfo').text());
+		$('#edittext').css("display", "block");
+		$('#editform').css("display", "block");
+	});
+	
+	
+	
+	
+	/* Submit inspiration info text */
+	$('#insptextsubmit').click(function() {
+		var insptext = $('#inspedittext').val();
+		$('#inspinfo').text(insptext);
+		
+		$('#inspedittext').css("display", "none");
+		$('#inspeditform').css("display", "none");
+		
+		/*Update database with text info*/
+		/*Get variables to pass */
+		
+		var newtext = insptext;
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		      
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/editinspirationtext.php',
+		 	 data: {text: newtext, wedid: wedid, catid: catid},
+		 	 success: function(data) {
+	  		} 
+	  	
+		});
+		
+	});
+	
+	
+	/* Submit inspiration info text */
+	$('#textsubmit').click(function() {
+		var insptext = $('#edittext').val();
+		$('#aboutinfo').text(insptext);
+		
+		$('#edittext').css("display", "none");
+		$('#editform').css("display", "none");
+		
+		/*Update database with text info*/
+		/*Get variables to pass */
+		
+		var newtext = insptext;
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/editabouttext.php',
+		 	 data: {text: newtext, wedid: wedid, catid: catid},
+		 	 success: function(data) {
+	  		} 
+	  	
+		});
+		
+	});
+	
+	
+	
+	/* Add picture to Inspiration */
+	$('#inspform').submit(function(e) {
+		/* Run the php file */
+		var uname = retrieve_cookie("currentusername");
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		
+		
+		var fd = new FormData(this); 
+		fd.append("uname", uname);
+		fd.append("wedid", wedid);
+		fd.append("catid", catid);
+
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/uploadinspirationpic.php',
+		 	 data: fd,
+		 	 contentType: false,
+		 	 cache: false,
+		 	 processData: false,
+		 	 success: function(data) {
+		    	$('#postinsppic').append("data is " + data);
+		    	getinspimagenames(wedid, catid);
+	  		} 
+	  	
+		});
+		e.preventDefault();
+		
+	});
+	
+	
+	/* Add picture to Pictures part of category */
+	$('#picform').submit(function(e) {
+		/* Run the php file */
+		var uname = retrieve_cookie("currentusername");
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		
+		
+		var fd = new FormData(this); 
+		fd.append("uname", uname);
+		fd.append("wedid", wedid);
+		fd.append("catid", catid);
+
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/uploadpic.php',
+		 	 data: fd,
+		 	 contentType: false,
+		 	 cache: false,
+		 	 processData: false,
+		 	 success: function(data) {
+		    	$('#postpic').append("data is " + data);
+		    	getimagenames(wedid, catid);
+	  		} 
+	  	
+		});
+		e.preventDefault();
+		
+	});
+	
+	function addtaskajax(){
+		var name = $('#taskname').val();
+		var budget = $('#taskbudget').val();
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		
+		/* Post the new task */
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/addtask.php',
+		 	 data: {wedid: wedid, catid: catid, name: name, budget: budget},
+		 	 success: function(data) {
+		    	$('#tasklist').append(data);
+		    	gettasklist($wedid, $catid);
+	  		} 
+	  	
+		});	
+		
+	}
+	
+	
+	/* Add at task to the table */
+	$('#addtask').click(function(){
+		
+		addtaskajax();
+		
+		gettasklist($wedid, $catid);
+		
+		$('#tasktable').table("refresh");
+		
+	});
+	
+	
+	
+	/* Complete a Task */
+	$('#completetask').click(function(){
+		var name = $('#completename').val();
+		var wedid = retrieve_cookie("currentweddingid").substring(1);
+		var catid = retrieve_cookie("currentcategory");
+		
+		/* Post the new task */
+		$.ajax({
+		  	method: 'POST',
+		  	url: 'http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/completetask.php',
+		 	 data: {wedid: wedid, catid: catid, name: name},
+		 	 success: function(data) {
+		    	$('#tasklist').append(data);
+		    	gettasklist($wedid, $catid);
+	  		} 
+	  	
+		});
+		gettasklist($wedid, $catid);
+		
+	});
+	
+	
+});
+
+
+
+
+</script>
+</head>
+<body>
+<center>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1>BridesMade Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+	<p align="center">
+	<a href="#login">Login</a>
+	<br>
+	<a href="#register">Register</a>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+  	
+  	<div id="nologmaincontent" align="center">
+    <p align="center">Login here!</p>
+
+	<div id="loginform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="username">
+	<br>
+	Password:<br>
+	<input type="text" id="password"">
+	<br><br>
+	<input type="button" value="Login" id="loginsubmit">
+	</form> 
+	</div>
+	
+	<p id="postlogin"></p>
+	
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="register">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<div id="nologmaincontent" align="center">
+    <p align="center">Register here!</p>
+   
+	<div id="registerform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="regusername">
+	<br>
+	Password:<br>
+	<input type="text" id="regpassword"">
+	<br>
+	Email:<br>
+	<input type="text" id="regemail">
+	<br>
+	First name:<br>
+	<input type="text" id="regfirstname">
+	<br>
+	Last name:<br>
+	<input type="text" id="reglastname">
+	<br><br>
+	<input type="button" value="Register" id="registersubmit">
+	</form> 
+	</div>
+	
+	<p id="postregister"></p>
+	<br>
+	<br>
+	
+	</div>
+
+  </div>
+
+</div> 
+
+<div data-role="page" id="logout">
+  <div data-role="header">
+    <h1>BridesMade Logout</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	<form action="logout.php">
+	Would you like to logout?
+	<input type="button" value="Logout" id="logoutsubmit">
+	</form>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="profile">
+  <div data-role="header">
+    <h1>BridesMade Profile</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	Welcome!
+	<br>
+	<form>
+	Would you like to start on a new wedding?
+	Name:<br>
+	<input type="text" id="weddingname"">
+	<input type="button" value="Create New" id="createwedding">
+	</form>
+	<p id="postcreatewed"></p>
+	
+	<br>
+	<br>
+	
+	<form>
+	Click for a list of your current weddings:
+	<input type="button" value="Get Wedding List" id="listweddings">
+	</form>
+	</p>
+	
+	<form id="weddingselection">
+	<p id="weddinglist"></p>
+	<input type="button" value="Select Wedding" id="selectwedding">
+	</form>
+	<p id="weddingiddisplay"></p>
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="weddingmain">
+  <div data-role="header">
+    <h1>BridesMade Wedding</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	
+	<div class="cat" id="cat1">
+	<p class="cattext">Category 1</p>
+	</div>
+	<div class="cat" id="cat2">
+	<p class="cattext">Category 2</p>
+	</div>
+	<div class="cat" id="cat3">
+	<p class="cattext">Category 3</p>
+	</div>
+	<div class="cat" id="cat4">
+	<p class="cattext">Category 4</p>
+	</div>
+	<div class="cat" id="cat5">
+	<p class="cattext">Category 5</p>
+	</div>
+	<div class="cat" id="cat6">
+	<p class="cattext">Category 6</p>
+	</div>
+	<div class="cat" id="cat7">
+	<p class="cattext">Category 7</p>
+	</div>
+	<div class="cat" id="cat8">
+	<p class="cattext">Category 8</p>
+	</div>
+	<div class="cat" id="cat9">
+	<p class="cattext">Category 9</p>
+	</div>
+	
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="category">
+  <div data-role="header">
+    <h1 id="cattitle">BridesMade Category</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav class="weddingnav"><p>Navigation</p>
+	<a href="#profile">Profile</a>
+	<a href="#logout">Logout</a></nav>
+	
+	<div id="maincontent">
+	<h2>Inspiration</h2>
+	<p>Pictures</p>
+	<p id="insppics"></p>
+	<div id="inspirationpics">
+		<form id="inspform" action="" method="post" enctype="multipart/form-data">
+	    Select image to upload:
+	    <input type="file" name="file" id="file">
+	    <input type="submit" value="Upload Image" id="submitinsppic">
+		</form>
+		<p id="postinsppic"></p>
+	</div>
+	
+	<br>
+	<h2>Inspiration Info</h2>
+	<p id="inspinfo"></p>
+	<form>
+	<input type="button" value="Edit Inspiration Info" id="inspaddinfo">
+	</form>
+	<textarea form="inspeditform" id="inspedittext"></textarea>
+	<form id="inspeditform">
+	<p id="putinspsubmit">
+	<input type="button" value="Submit" id="insptextsubmit"></p>
+	</form>
+	<br>
+	<br>
+	
+	
+	<h2>Pictures</h2>
+	<p id="pics"></p>
+	<div id="pictures">
+	<form id="picform" action="" method="post" enctype="multipart/form-data">
+	    Select image to upload:
+	    <input type="file" name="pic" id="pic">
+	    <input type="submit" value="Upload Image" id="submitpic">
+	</form>
+	<p id="postpic"></p>
+	
+	</div>
+	
+	
+	<h2>About</h2>
+	<p id="aboutinfo"></p>
+	<form>
+	<input type="button" value="Edit About" id="addinfo">
+	</form>
+	<textarea form="editform" id="edittext"></textarea>
+	<form id="editform">
+	<p id="putsubmit">
+	<input type="button" value="Submit" id="textsubmit">
+	
+	</p>
+	</form>
+	
+	
+	<h2>Tasklist</h2>
+	<p id="tasklist">
+	<table id="tasktable" data-role="table" class="ui-responsive table-stroke"></table>
+	
+	<h4>Add Task:</h4>
+	<form id="addtaskform">
+	<p>Task Name:</p>
+	<input type="text" id="taskname">
+	<p>Budget</p>
+	<input type="text" id="taskbudget">
+	<input type="button" value="Add Task" id="addtask">
+	</form>
+	
+	<h4>Set Task as Complete:</h4>
+	<form>
+	<p>Task Name:</p>
+	<input type="text" id="completename">
+	<input type="button" value="Complete Task" id="completetask">
+	</form>
+	
+	<input id="add_and_refresh" data-role="button" data-icon="refresh" data-theme="c" data-inline="true" value="Add rows & refresh" type="button">
+	
+	</p>
+	
+	<br>
+	<br>
+	<br>
+  </div>
+  </div>
+
+</div> 
+
+
+
+</center>
+</body>
+</html>
+

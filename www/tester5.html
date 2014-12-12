@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="style.css" media="screen" type="text/css">
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	/* Logon */
+	$('#loginsubmit').click(function() {
+	var uname = $("#username").val();
+    var pword = $("#password").val();
+    
+	/* URL for login php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/login.php";
+    
+	/* create the parameters to pass viw get */
+      var datastring="username=" + uname + "&password=" + pword;
+		/*  tell Jquery to send the info and expect back a JSON object  */
+		$.getJSON(URL, datastring, function(data) {
+ 			/* Get user info */
+        	$.each(data['users'], function(index, value) {
+        		$userinfo = value;
+        		if (value){
+					$('#postlogin').text("The user " + value['user']['Username'] + " is now logged in!");
+					$(location).attr('href','#profile');
+        		}
+			});
+
+
+		});
+	});
+	
+	
+	/* Register */
+	$('#registersubmit').click(function() {
+	/*Get register values */
+    var uname = $("#regusername").val();
+	var email = $("#regemail").val();
+	var pword = $("#regpassword").val();
+	var fname = $("#regfirstname").val();
+	var lname = $("#reglastname").val();
+	
+	/* URL for register php */
+    var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/register.php";
+    
+	/* Parameter string */
+      var datastring="username=" + uname + "&email=" + email + "&password=" + pword + "&firstname=" + fname + "&lastname=" + lname;
+      $('#postregister').text("Datastring is " + datastring);
+      
+      
+		/*  Send info and get back a JSON object  */
+		$.get(URL, datastring, function(data) {
+
+        	if (data == true){
+        		$('#postregister').text("You have registered successfully!");
+        	}
+        	else{
+        		$('#postregister').text("Registration failed!");
+        	}
+
+
+		});	
+		
+	});
+});
+
+
+
+
+</script>
+</head>
+<body>
+
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1>BridesMade Homepage</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+	
+	<nav><p>Navigation</p>
+	<a href="#home">Home</a></nav>
+	
+	<div id="maincontent">
+	<p align="center">
+	<a href="#login">Login</a>
+	<br>
+	<a href="#register">Register</a>
+	</p>
+    
+  </div>
+  </div>
+
+</div> 
+
+
+<div data-role="page" id="login">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+
+  <nav><p>Navigation</p>
+	<a href="#home">Home</a></nav>
+  	
+  	<div id="maincontent">
+    <p align="center">Login here!</p>
+
+	<div id="loginform" align="center">
+	<form>
+	Username:<br>
+	<input type="text" id="username">
+	<br>
+	Password:<br>
+	<input type="text" id="password"">
+	<br><br>
+	<input type="button" value="Submit" id="loginsubmit">
+	</form> 
+	</div>
+	
+	<p id="postlogin"></p>
+	
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+<div data-role="page" id="register">
+  <div data-role="header">
+    <h1>BridesMade Login</h1>
+  </div>
+
+  <div data-role="main" class="ui-content">
+  <div id="bannerdiv" align="center">
+	<img src="banner.png" id="banner">
+	</div>
+
+  <nav><p>Navigation</p>
+	<a href="#home">Home</a></nav>
+	
+	<div id="maincontent">
+    <p align="center">Register here!</p>
+   
+	<div id="registerform" align="center">
+	Username:<br>
+	<input type="text" id="regusername">
+	<br>
+	Password:<br>
+	<input type="text" id="regpassword"">
+	<br>
+	Email:<br>
+	<input type="text" id="regemail">
+	<br>
+	First name:<br>
+	<input type="text" id="regfirstname">
+	<br>
+	Last name:<br>
+	<input type="text" id="reglastname">
+	<br><br>
+	<input type="button" value="Submit" id="registersubmit">
+	</form> 
+	</div>
+	
+	<p id="postregister"></p>
+	<br>
+	<br>
+	
+	</div>
+
+  </div>
+
+</div> 
+
+
+
+</body>
+</html>
+
