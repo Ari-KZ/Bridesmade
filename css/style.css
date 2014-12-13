@@ -1,0 +1,30 @@
+body{background-color: #FFF; color: #555;}
+a:link{color:#3399CC;}
+a:visited{color:#3CC;}
+img{border-style:outset; border-width:medium; border-color:#FFFFFF;}
+#banner{width:80%; border:none;}
+#mainlogo{width:60%; border: none;}
+#registerform{align:center;}
+#weddingselection{display: none;}
+#inspedittext{display: none;}
+#inspeditform{display: none;}
+#edittext{display: none;}
+#editform{display: none;}
+table{border: 1px solid black; background-color:#FFF;}
+th{border: 1px solid black; padding-left:25px;padding-right:25px;padding-top:9px;padding-bottom:9px;white-space:nowrap}
+td{border: 1px solid black; padding-left:25px;padding-right:25px;padding-top:9px;padding-bottom:9px; white-space:nowrap; text-align:center;}
+textarea{width:70%, height:40%;}
+.cat{background-color: #333; color: #AAA; float: left; width: 10em; height: 10em; margin-left: 3em; margin-top: 3em; margin-bottom: 2em;}
+.cattext{text-align: center; float: bottom;}
+.cat:hover{background-color: #666;}
+.icon{max-width:100%; border: none;}
+.picsmall{width: 10%; margin: 2px;}
+.picbig{width: 80%; margin: 2px;}
+div#maincontent{float:left; width:60%; margin-top: 1%; margin-left: 5%;}
+div#nologmaincontent{width:60%;}
+nav{float: left; width: 20%; margin-left:1%; margin-right: 1%, margin-top: 1%; text-align:center;}
+nav p{display:block; background-color:#666; color: #FFF; border-style:solid; border-width:thin; border-color:#222;}
+nav a{display:block; background-color:#CCC; border:#666;borders-width:thin; padding-left:20px; padding-right:20px; padding-top:7px; padding-bottom:7px;border-style:solid; border-width:thin; border-color:#FFFFFF; text-decoration:none;}
+nav a:hover{background-color:#306}
+nav a:link{color:#FFFFFF;}
+nav a:visited{color:#FFFFFF;}
