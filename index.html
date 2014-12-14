@@ -771,13 +771,17 @@ $(document).ready(function() {
 
 
 
+
+
+
+
 </script>
 </head>
 <body>
 <center>
 
 <div data-role="page" id="home">
-  <div data-role="header">
+  <div data-role="header" data-position="fixed">
     <h1>BridesMade Homepage</h1>
   </div>
 
@@ -799,13 +803,15 @@ $(document).ready(function() {
     
   </div>
   </div>
-
+<div data-role="footer" class="header">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 </div> 
 
 
 <div data-role="page" id="login">
-  <div data-role="header">
-    <h1>BridesMade Login</h1>
+  <div data-role="header" data-position="fixed">
+    <h1>Login</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -837,14 +843,17 @@ $(document).ready(function() {
 	</div>
 
   </div>
+<div data-role="footer">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 
 </div> 
 
 
 
 <div data-role="page" id="register">
-  <div data-role="header">
-    <h1>BridesMade Login</h1>
+  <div data-role="header" data-position="fixed">
+    <h1>Login</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -886,12 +895,15 @@ $(document).ready(function() {
 	</div>
 
   </div>
+<div data-role="footer" data-position="fixed">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 
 </div> 
 
 <div data-role="page" id="logout">
-  <div data-role="header">
-    <h1>BridesMade Logout</h1>
+  <div data-role="header" data-position="fixed">
+    <h1>Logout</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -914,14 +926,17 @@ $(document).ready(function() {
     
   </div>
   </div>
+<div data-role="footer">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 
 </div> 
 
 
 
 <div data-role="page" id="profile">
-  <div data-role="header">
-    <h1>BridesMade Profile</h1>
+  <div data-role="header" data-position="fixed">
+    <h1>Profile</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -963,13 +978,16 @@ $(document).ready(function() {
 	<br>
   </div>
   </div>
+<div data-role="footer" data-position="fixed">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 
 </div> 
 
 
-<div data-role="page" id="weddingmain">
-  <div data-role="header">
-    <h1>BridesMade Wedding</h1>
+<div data-role="page" id="weddingmain" >
+  <div data-role="header" data-position="fixed" >
+    <h1>Wedding</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -1017,13 +1035,16 @@ $(document).ready(function() {
 	<br>
   </div>
   </div>
+<div data-role="footer" data-position="fixed">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 
 </div> 
 
 
-<div data-role="page" id="category">
-  <div data-role="header">
-    <h1 id="cattitle">BridesMade Category</h1>
+<div data-role="page" id="category" >
+  <div data-role="header" data-position="fixed" >
+    <h1 id="cattitle">Category</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -1093,7 +1114,7 @@ $(document).ready(function() {
 	
 	<h2>Tasklist</h2>
 	<p id="tasklist">
-	<table id="tasktable"></table>
+	<table id="tasktable" data-max="30" data-min="10"></table>
 	
 	<h4>Add Task:</h4>
 	<form id="addtaskform">
@@ -1118,7 +1139,9 @@ $(document).ready(function() {
 	<br>
   </div>
   </div>
-
+<div data-role="footer" data-position="fixed">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 </div> 
 
 
