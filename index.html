@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="HandheldFriendly" content="true" />
+<meta name="MobileOptimized" content="320" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
 <link rel="stylesheet" href="css/style.css" media="screen" type="text/css">
@@ -9,12 +11,18 @@
 <script>
 $(document).ready(function() {
 	
+	// If on mobile device, change some settings
+	if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+	 $('.weddingnav').css({position: 'relative', width: '80%'});
+	 $('.maincontent').css({position: 'relative'});
+	}
+	
 	/* Logon */
 	$('#loginsubmit').click(function() {
 	var uname = $("#username").val();
     var pword = $("#password").val();
     
-    create_cookie("currentusername", uname, 1, "/");
+    create_cookie("currentusername", uname);
     
 	/* URL for login php */
     var URL="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/programs/login.php";
@@ -186,6 +194,7 @@ $(document).ready(function() {
 	
 	});
 
+	/*
 	function create_cookie(name, value, days2expire, path) {
   		var date = new Date();
   		date.setTime(date.getTime() + (days2expire * 24 * 60 * 60 * 1000));
@@ -194,7 +203,22 @@ $(document).ready(function() {
                    'expires=' + expires + ';' +
                    'path=' + path + ';';
 	}
+	*/
 	
+	function create_cookie(name, value) {
+		window.localStorage.setItem(name, value);
+	}
+	
+	function retrieve_cookie(name) {
+		var result = window.localStorage.getItem(name);
+		
+		return result;
+	}
+	
+	
+	
+	
+	/*
 	function retrieve_cookie(name) {
  		 var cookie_value = "",
    		 current_cookie = "",
@@ -211,6 +235,7 @@ $(document).ready(function() {
   		}
   		return cookie_value;
 	}
+	*/
 	
 	
 	
@@ -224,8 +249,8 @@ $(document).ready(function() {
    		var wedname = $('input:radio[name=radiogroup]:checked + label').text();
     
     	/* Set wedding name and wedding id */
-    	create_cookie("currentwedding", wedname, 1, "/");
-    	create_cookie("currentweddingid", wedid, 1, "/");
+    	create_cookie("currentwedding", wedname);
+    	create_cookie("currentweddingid", wedid);
     	
     	emptyprofiletext();
 	
@@ -370,7 +395,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 1;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -391,7 +416,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 2;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -412,7 +437,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 3;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -433,7 +458,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 4;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -454,7 +479,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 5;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -475,7 +500,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 6;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -496,7 +521,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 7;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -517,7 +542,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 8;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -538,7 +563,7 @@ $(document).ready(function() {
 		var wname = retrieve_cookie("currentwedding");
 		/* Set the category */
 		var catid = 9;
-		create_cookie("currentcategory", catid, 1, "/");
+		create_cookie("currentcategory", catid);
 		
 		getcategorytext(wid, catid);
 		getinspimagenames(wid, catid);
@@ -771,10 +796,6 @@ $(document).ready(function() {
 
 
 
-
-
-
-
 </script>
 </head>
 <body>
@@ -792,20 +813,16 @@ $(document).ready(function() {
 	
 	<div id="nologmaincontent" align="center">
 	<p align="center">
-	<p>Welcome to BridesMade!  Please login or register below!</p>
+	<p>Welcome to BridesMade! <br> Please login or register below!</p>
 	<div>
 	<img src="images/BridesMadeLogo.jpg" id="mainlogo">
 	</div>
-	<a href="#login">Login</a>
-	<br>
-	<a href="#register">Register</a>
+	<a href="#login"><h3>Login</h3></a>
+	<a href="#register"><h3>Register</h3></a>
 	</p>
     
   </div>
   </div>
-<div data-role="footer" class="header">
-		<h4> Bridesmade Mobile &copy; 2014</h4>
-	</div>
 </div> 
 
 
@@ -1149,4 +1166,6 @@ $(document).ready(function() {
 </center>
 </body>
 </html>
+
+
 
