@@ -20,15 +20,17 @@
 		<preference name="exit-on-suspend" value="true" />
 		<preference name="android-minSdkVersion" value="14" />
 		<preference name="android-installLocation" value="auto" />
-		<icon src="images/icons//Logo_36.png" gap:platform="android" gap:density="ldpi" />
-		<icon src="images/icons//Logo_48.png" gap:platform="android" gap:density="mdpi" />
-		<icon src="images/icons//Logo_72.png" gap:platform="android" gap:density="hdpi" />
-		<icon src="images/icons//Logo_96.png" gap:platform="android" gap:density="xhdpi" />
-		<icon src="images/icons//Logo_144.png" gap:platform="android" gap:density="xxhdpi" />
-		<gap:splash src="images/splash/Port_ldpi.jpg" gap:platform="android" gap:density="ldpi" />
+		<platform name="android">
+			<icon src="images/icons//Logo_36.png"  density="ldpi" />
+			<icon src="images/icons//Logo_48.png"  density="mdpi" />
+			<icon src="images/icons//Logo_72.png"  density="hdpi" />
+			<icon src="images/icons//Logo_96.png"  density="xhdpi" />
+			<icon src="images/icons//Logo_144.png" density="xxhdpi" />
+		<platform>
+		<gap:splash src="images/splash/Port_ldpi.png" gap:platform="android" gap:density="ldpi" />
 		<gap:splash src="images/splash/Port_mdpi.jpg.png" gap:platform="android" gap:density="mdpi" />
 		<gap:splash src="images/splash/Port_hdpi.jpg.png" gap:platform="android" gap:density="hdpi" />
-		<gap:splash src="images/splash/Port_hdpi.jpg" gap:platform="android" gap:density="xhdpi" />
+		<gap:splash src="images/splash/Port_hdpi.png" gap:platform="android" gap:density="xhdpi" />
 		<feature name="http://api.phonegap.com/1.0/camera"/>
 		<feature name="http://api.phonegap.com/1.0/file"/>			
 		<feature name="http://api.phonegap.com/1.0/geolocation"/>
