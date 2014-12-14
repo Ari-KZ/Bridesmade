@@ -1,54 +1,51 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.bridesmaid" version="3.0.0" versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id = "com.bridesmaid" version = "3.0.0" versionCode = "1" 
+	xmlns = "http://www.w3.org/ns/widgets" 
+	xmlns:gap = "http://phonegap.com/ns/1.0">
     <name>Bridesmade</name>
     <description>
         Bridesmaid - Wedding Helper and Planner
     </description>
     <author email="arz2030@gmail.com" href="http://websys3.stern.nyu.edu/websysF14GB/websysF14GB3/WWW/INDEX.HTML">
-        Our Team
+    	Karen Toni Adam Arman
     </author>
     
-	<gap:platform name="android" />
-	<gap:platform name="winphone" />
-
-	<preference name="orientation" value="portrait" />
-	<preference name="fullscreen" value="false" />
-	<preference name="webviewbounce" value="false" />
-	<preference name="DisallowOverscroll" value="true"/>
-	<preference name="disallowOverscroll" value="true" />
-	<preference name="exit-on-suspend" value="true" />
-	<preference name="android-minSdkVersion" value="14" />
-	<preference name="android-installLocation" value="auto" />
-
-	<icon src="images/icons//Logo_36.png" gap:platform="android" gap:density="ldpi" />
-	<icon src="images/icons//Logo_48.png" gap:platform="android" gap:density="mdpi" />
-	<icon src="images/icons//Logo_72.png" gap:platform="android" gap:density="hdpi" />
-	<icon src="images/icons//Logo_96.png" gap:platform="android" gap:density="xhdpi" />
-	<icon src="images/icons//Logo_144.png" gap:platform="android" gap:density="xxhdpi" />
-
-	<gap:splash src="images/splash/Port_ldpi.jpg" gap:platform="android" gap:density="ldpi" />
-	<gap:splash src="images/splash/Port_mdpi.jpg.png" gap:platform="android" gap:density="mdpi" />
-	<gap:splash src="images/splash/Port_hdpi.jpg.png" gap:platform="android" gap:density="hdpi" />
-	<gap:splash src="images/splash/Port_hdpi.jpg" gap:platform="android" gap:density="xhdpi" />
-
-	<feature name="http://api.phonegap.com/1.0/camera"/>
-	<feature name="http://api.phonegap.com/1.0/file"/>			
-	<feature name="http://api.phonegap.com/1.0/geolocation"/>
-	<feature name="http://api.phonegap.com/1.0/network"/>
-
-	<gap:plugin name="org.apache.cordova.camera"  />
-	<gap:plugin name="org.apache.cordova.geolocation"  />
-	<gap:plugin name="org.apache.cordova.dialogs"  />
-	<gap:plugin name="org.apache.cordova.device"  />
-	<gap:plugin name="org.apache.cordova.network-information"  />
-	<gap:plugin name="org.apache.cordova.console"  />
-	<gap:plugin name="org.apache.cordova.inappbrowser"  />
-	<gap:plugin name="org.apache.cordova.network-information"  />
-	<gap:plugin name="org.apache.cordova.splashscreen"  />
-	<gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1" >
-	<gap:plugin name="nl.x-services.plugins.socialsharing" version="4.3.0" />
-	<content src = "index.html" />
-	<access origin = "*" subdomains="true"/>
+		<gap:platform name="android" />
+		<gap:platform name="winphone" />
+		<preference name="orientation" value="portrait" />
+		<preference name="fullscreen" value="false" />
+		<preference name="webviewbounce" value="false" />
+		<preference name="DisallowOverscroll" value="true"/>
+		<preference name="disallowOverscroll" value="true" />
+		<preference name="exit-on-suspend" value="true" />
+		<preference name="android-minSdkVersion" value="14" />
+		<preference name="android-installLocation" value="auto" />
+		<icon src="images/icons//Logo_36.png" gap:platform="android" gap:density="ldpi" />
+		<icon src="images/icons//Logo_48.png" gap:platform="android" gap:density="mdpi" />
+		<icon src="images/icons//Logo_72.png" gap:platform="android" gap:density="hdpi" />
+		<icon src="images/icons//Logo_96.png" gap:platform="android" gap:density="xhdpi" />
+		<icon src="images/icons//Logo_144.png" gap:platform="android" gap:density="xxhdpi" />
+		<gap:splash src="images/splash/Port_ldpi.jpg" gap:platform="android" gap:density="ldpi" />
+		<gap:splash src="images/splash/Port_mdpi.jpg.png" gap:platform="android" gap:density="mdpi" />
+		<gap:splash src="images/splash/Port_hdpi.jpg.png" gap:platform="android" gap:density="hdpi" />
+		<gap:splash src="images/splash/Port_hdpi.jpg" gap:platform="android" gap:density="xhdpi" />
+		<feature name="http://api.phonegap.com/1.0/camera"/>
+		<feature name="http://api.phonegap.com/1.0/file"/>			
+		<feature name="http://api.phonegap.com/1.0/geolocation"/>
+		<feature name="http://api.phonegap.com/1.0/network"/>
+		<gap:plugin name="org.apache.cordova.camera"  />
+		<gap:plugin name="org.apache.cordova.geolocation"  />
+		<gap:plugin name="org.apache.cordova.dialogs"  />
+		<gap:plugin name="org.apache.cordova.device"  />
+		<gap:plugin name="org.apache.cordova.network-information"  />
+		<gap:plugin name="org.apache.cordova.console"  />
+		<gap:plugin name="org.apache.cordova.inappbrowser"  />
+		<gap:plugin name="org.apache.cordova.network-information"  />
+		<gap:plugin name="org.apache.cordova.splashscreen"  />
+		<gap:plugin name="com.phonegap.plugins.pushplugin" version="2.1.1"  />
+		<gap:plugin name="nl.x-services.plugins.socialsharing" version="4.3.0" />
+		<content src= "index.html" />
+		<access origin="*" subdomains="true"/>
 </widget>
 
 
