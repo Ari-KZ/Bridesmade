@@ -803,7 +803,7 @@ $(document).ready(function() {
 
 <div data-role="page" id="home">
   <div data-role="header" data-position="fixed">
-    <h1>BridesMade Homepage</h1>
+    <h1>HOMEPAGE</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -819,16 +819,20 @@ $(document).ready(function() {
 	</div>
 	<a href="#login"><h3>Login</h3></a>
 	<a href="#register"><h3>Register</h3></a>
+    <br>
 	</p>
     
   </div>
   </div>
+<div data-role="footer">
+		<h4> Bridesmade Mobile &copy; 2014</h4>
+	</div>
 </div> 
 
 
 <div data-role="page" id="login">
   <div data-role="header" data-position="fixed">
-    <h1>Login</h1>
+    <h1>LOGIN</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -870,7 +874,7 @@ $(document).ready(function() {
 
 <div data-role="page" id="register">
   <div data-role="header" data-position="fixed">
-    <h1>Login</h1>
+    <h1>Registration</h1>
   </div>
 
   <div data-role="main" class="ui-content">
@@ -919,19 +923,24 @@ $(document).ready(function() {
 </div> 
 
 <div data-role="page" id="logout">
-  <div data-role="header" data-position="fixed">
-    <h1>Logout</h1>
-  </div>
+  <div data-role="header">	
+  <h1>LOGOUT</h1>	
+  <a href="#logout" data-icon="delete" class="ui-btn-right">Logout</a>
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Home</a></li>
+            <li><a href="#profile">Profile</a></li>
+			<li><a href="#weddingmain">View Wedding</a></li>
+			
+		</ul>
+	</div>
+</div>
+
 
   <div data-role="main" class="ui-content">
     <div id="bannerdiv" align="center">
 	<img src="images/banner.png" id="banner">
 	</div>
-	
-	<nav><p>Navigation</p>
-	<a href="#profile" class="profilelink">Profile</a>
-	<a href="#weddingmain">View Wedding</a>
-	<a href="#logout">Logout</a></nav>
 	
 	<div id="maincontent">
 	<p align="center">
@@ -952,20 +961,25 @@ $(document).ready(function() {
 
 
 <div data-role="page" id="profile">
-  <div data-role="header" data-position="fixed">
-    <h1>Profile</h1>
-  </div>
+  <div data-role="header" data-position="fixed">	
+  <h1>PROFILE</h1>	
+  <a href="#logout" data-icon="delete" class="ui-btn-right">Logout</a>
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Home</a></li>
+            <li><a href="#profile">Profile</a></li>
+			<li><a href="#weddingmain">View Wedding</a></li>
+			
+		</ul>
+	</div>
+</div>
+
 
   <div data-role="main" class="ui-content">
     <div id="bannerdiv" align="center">
 	<img src="images/banner.png" id="banner">
 	</div>
-	
-	<nav><p>Navigation</p>
-	<a href="#profile" class="profilelink">Profile</a>
-	<a href="#weddingmain">View Wedding</a>
-	<a href="#logout">Logout</a></nav>
-	
+		
 	<div id="maincontent">
 	<p align="center">
 	Welcome!
@@ -1003,19 +1017,24 @@ $(document).ready(function() {
 
 
 <div data-role="page" id="weddingmain" >
-  <div data-role="header" data-position="fixed" >
-    <h1>Wedding</h1>
-  </div>
+  <div data-role="header" data-position="fixed">	
+  <h1>WEDDING</h1>	
+  <a href="#logout" data-icon="delete" class="ui-btn-right">Logout</a>
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Home</a></li>
+            <li><a href="#profile">Profile</a></li>
+			<li><a href="#weddingmain">View Wedding</a></li>
+			
+		</ul>
+	</div>
+</div>
+
 
   <div data-role="main" class="ui-content">
     <div id="bannerdiv" align="center">
 	<img src="images/banner.png" id="banner">
 	</div>
-	
-	<nav class="weddingnav"><p>Navigation</p>
-	<a href="#profile" class="profilelink">Profile</a>
-	<a href="#weddingmain">View Wedding</a>
-	<a href="#logout">Logout</a></nav>
 	
 	<div id="maincontent">
 	
@@ -1060,19 +1079,25 @@ $(document).ready(function() {
 
 
 <div data-role="page" id="category" >
-  <div data-role="header" data-position="fixed" >
-    <h1 id="cattitle">Category</h1>
-  </div>
+  <div data-role="header" data-position="fixed">	
+  <h1>CATEGORY</h1>	
+  <a href="#logout" data-icon="delete" class="ui-btn-right">Logout</a>
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#home">Home</a></li>
+            <li><a href="#profile">Profile</a></li>
+			<li><a href="#weddingmain">View Wedding</a></li>
+			
+		</ul>
+	</div>
+</div>
 
   <div data-role="main" class="ui-content">
     <div id="bannerdiv" align="center">
 	<img src="images/banner.png" id="banner">
 	</div>
-	
-	<nav class="weddingnav"><p>Navigation</p>
-	<a href="#profile" class="profilelink">Profile</a>
-	<a href="#weddingmain">View Wedding</a>
-	<a href="#logout">Logout</a></nav>
+    	
+
 	
 	<div id="maincontent">
 	<h2>Inspiration</h2>
